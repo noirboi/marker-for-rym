@@ -1,13 +1,13 @@
 # Marker for RYM
 
-A minimal Chrome extension for [Rate Your Music](https://rateyourmusic.com). It syncs your music and film collection ratings, then highlights releases you’ve already rated on charts, lists, and similar pages. Optional star badges show your score next to titles.
+A minimal **Chrome and Firefox** extension for [Rate Your Music](https://rateyourmusic.com). It syncs your music and film collection ratings, then highlights releases you’ve already rated on charts, lists, and similar pages. Optional star badges show your score next to titles.
 
 Ratings stay on your device only — nothing is sent to a third-party server.
 
 ## News & updates
 
-RYM forum thread (announcements, feedback, support):  
-[Chrome Extension: Marker for RYM](https://rym.fm/discussion/rate-your-music/_chrome-extension-marker-for-rym-highlight-your-rated-items-on-charts-and-lists/)
+Announcements, feedback, and support (RYM forum):  
+https://rym.fm/discussion/rate-your-music/_chrome-extension-marker-for-rym-highlight-your-rated-items-on-charts-and-lists/
 
 ## Features
 
@@ -16,13 +16,25 @@ RYM forum thread (announcements, feedback, support):
 - Optional ★ rating badges (can be turned off in the popup)
 - Local storage only (`chrome.storage.local`)
 
-## Install (developer / unpacked)
+## Install (Chrome)
 
 1. Clone or download this repository.
 2. Open `chrome://extensions`.
 3. Enable **Developer mode**.
 4. Click **Load unpacked** and select this folder.
 5. Pin **Marker for RYM** from the toolbar if you like.
+
+## Install (Firefox)
+
+Requires **Firefox 140+** (Manifest V3 sync uses `world: "MAIN"`; AMO data-collection declaration needs 140+).
+
+1. Clone or download this repository.
+2. Open `about:debugging#/runtime/this-firefox`.
+3. Click **Load Temporary Add-on…**.
+4. Select `manifest.json` in this folder.
+5. Open a [rateyourmusic.com](https://rateyourmusic.com) tab, then use the toolbar button.
+
+Temporary add-ons are removed when Firefox restarts. For a permanent install, use a build from [addons.mozilla.org](https://addons.mozilla.org) once published, or keep reloading via `about:debugging` while developing.
 
 ## How to use
 
@@ -44,17 +56,19 @@ RYM forum thread (announcements, feedback, support):
 ## Privacy
 
 - Sync uses your logged-in RYM session in the browser tab.
-- Rating data is stored locally in Chrome storage.
+- Rating data is stored locally in Chrome/Firefox storage.
 - No analytics backend and no upload of your collection to this project’s authors.
+
+Full policy: [PRIVACY.md](PRIVACY.md)
 
 ## Development
 
-Chrome Manifest V3. Main files:
+Chrome / Firefox Manifest V3. Same codebase for both browsers. Main files:
 
-- `manifest.json` — extension config
+- `manifest.json` — extension config (`browser_specific_settings.gecko` for Firefox)
 - `popup.html` / `popup.js` — popup UI and sync controls
 - `content.js` — highlights and badges on RYM pages
-- `page-context-sync.js` — in-page collection sync helper
+- `page-context-sync.js` — in-page collection sync helper (injected into the page)
 
 ## License
 

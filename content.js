@@ -326,8 +326,21 @@ function isListItemEditUiContext(anchor) {
   return false;
 }
 
+function releaseLinkCountIn(el) {
+  if (!el || !el.querySelectorAll) return 0;
+  return el.querySelectorAll(RYM_LIST_LINK_SELECTOR).length;
+}
+
+/** Containers that hold many release/film links (e.g. /contributed/release flat lists). */
+function isOversizedReleaseListContainer(el) {
+  return releaseLinkCountIn(el) > HIGHLIGHT_MAX_LINKS_FOR_CLASS_MATCH;
+}
+
 function findContainerForReleaseLink(anchor) {
   if (anchor.closest(".section_release_navigation")) return null;
+
+  /* Cover / thumbnail links (e.g. list header image) — never highlight their pad wrappers. */
+  if (anchor.querySelector("img")) return null;
 
   if (isListItemEditUiContext(anchor)) return null;
 
@@ -355,14 +368,14 @@ function findContainerForReleaseLink(anchor) {
       }
     }
   }
-  if (tableRow) return tableRow;
+  if (tableRow && !isOversizedReleaseListContainer(tableRow)) return tableRow;
 
   const discoInfo = anchor.closest(".disco_info");
   if (discoInfo) return discoInfo;
 
   const row =
     anchor.closest("li") || anchor.closest('[role="row"]');
-  if (row) return row;
+  if (row && !isOversizedReleaseListContainer(row)) return row;
 
   const albumish = anchor.closest("a.album, a.film, .album, .film, a.list_film");
   if (albumish && albumish !== anchor) {
@@ -386,7 +399,12 @@ function findContainerForReleaseLink(anchor) {
         depth += 1;
         continue;
       }
-      const linkCount = el.querySelectorAll(RYM_LIST_LINK_SELECTOR).length;
+      const linkCount = releaseLinkCountIn(el);
+      if (linkCount > HIGHLIGHT_MAX_LINKS_FOR_CLASS_MATCH) {
+        el = el.parentElement;
+        depth += 1;
+        continue;
+      }
       if (linkCount === 1) {
         return preferTableRowIfAny(el);
       }
@@ -411,7 +429,7 @@ function findContainerForReleaseLink(anchor) {
   }
 
   let fallback = anchor.parentElement;
-  while (fallback && fallback !== anchor && fallback !== document.body) {
+  while (fallback && fallback !== document.body) {
     const tag = fallback.tagName;
     if (
       tag === "SPAN" ||
@@ -422,9 +440,15 @@ function findContainerForReleaseLink(anchor) {
       fallback = fallback.parentElement;
       continue;
     }
-    return preferTableRowIfAny(fallback);
+    /* Flat contributed lists share one parent for dozens of <a>s — never highlight that. */
+    if (releaseLinkCountIn(fallback) === 1) {
+      return preferTableRowIfAny(fallback);
+    }
+    fallback = fallback.parentElement;
   }
-  return preferTableRowIfAny(anchor.closest("td")) || null;
+
+  /* Last resort: highlight the link itself (e.g. /contributed/release). */
+  return anchor;
 }
 
 function clearHighlights() {
@@ -511,7 +535,7 @@ function applyHighlights(map) {
     if (!normalized || !hasRatedKey(map, normalized)) return;
 
     const target = findContainerForReleaseLink(a);
-    if (!target || target === a) return;
+    if (!target) return;
     highlightTargets.add(target);
   });
   highlightTargets.forEach((el) => {
