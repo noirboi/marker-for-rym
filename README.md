@@ -53,4 +53,4 @@ Chrome Manifest V3. Main files:
 
 ## License
 
-Add a license if you want others to reuse or redistribute the code (e.g. MIT). Until then, all rights reserved by the author.
+MIT — see [LICENSE](LICENSE).
