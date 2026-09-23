@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Marker for RYM</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      margin: 0;
+    }
+    body {
+      width: 300px;
+      margin: 0;
+      padding: 16px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #ffffff;
+      background: #1a1a1d;
+    }
+    .header-logo-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 0;
+      margin: 0 0 8px;
+      width: 100%;
+    }
+    .popup-main-logo {
+      height: 24px;
+      width: auto;
+      max-width: 100%;
+      display: block;
+    }
+    p {
+      margin: 0 0 16px;
+      color: #b0b0b8;
+      font-size: 12px;
+    }
+    p strong {
+      color: #e4e4e8;
+      font-weight: 600;
+    }
+    #progressContainer {
+      display: none;
+      margin-bottom: 12px;
+    }
+    .progress-bar-track {
+      height: 5px;
+      border-radius: 999px;
+      background: #2d2d32;
+      overflow: hidden;
+    }
+    .progress-bar-animated {
+      height: 100%;
+      width: 42%;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        rgba(49, 216, 67, 0.15),
+        #31d843,
+        #5ae86a,
+        #31d843,
+        rgba(49, 216, 67, 0.15)
+      );
+      background-size: 220% 100%;
+      animation: progress-slide 1.35s ease-in-out infinite;
+    }
+    @keyframes progress-slide {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(320%);
+      }
+    }
+    #status {
+      margin: 0 0 16px;
+      padding: 0 4px;
+      min-height: 2.6em;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: #9a9aa3;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+    #status.is-error {
+      color: #f87171;
+    }
+    #status.is-success {
+      color: #31d843;
+    }
+    button {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease,
+        color 0.15s ease, transform 0.08s ease;
+    }
+    button:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    #sync {
+      border: 1px solid #386c0b;
+      background: #386c0b;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(56, 108, 11, 0.35);
+    }
+    #sync:hover:not(:disabled) {
+      background: #467d14;
+      border-color: #528f18;
+      box-shadow: 0 4px 14px rgba(56, 108, 11, 0.45);
+    }
+    #forceSyncBtn {
+      margin-top: 10px;
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid #3f3f46;
+      border-radius: 8px;
+      background: transparent;
+      color: #888888;
+    }
+    #forceSyncBtn:hover:not(:disabled) {
+      background: rgba(248, 113, 113, 0.12);
+      border-color: #f87171;
+      color: #fca5a5;
+    }
+    .option-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 0 0 14px;
+      padding: 10px 10px;
+      border-radius: 8px;
+      background: #242428;
+      border: 1px solid #2d2d32;
+    }
+    .option-row input {
+      margin: 2px 0 0;
+      flex-shrink: 0;
+      accent-color: #31d843;
+      cursor: pointer;
+    }
+    .option-row label {
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #d4d4d8;
+    }
+    .option-row label span {
+      display: block;
+      margin-top: 2px;
+      font-size: 11px;
+      font-weight: 400;
+      color: #8b8b95;
+    }
+    .version-footer {
+      text-align: center;
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 15px;
+      padding-bottom: 5px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-logo-container">
+    <img src="logo.png" class="popup-main-logo" alt="Marker for RYM" />
+  </div>
+  <p>
+    Log in on <strong>rateyourmusic.com</strong>, then press <strong>Sync Ratings</strong>. Sync runs
+    <strong>in that tab</strong>; ratings are saved only on your device. Leave the popup open to see
+    progress. Lists then show which releases you have rated; optional badges below.
+  </p>
+  <div class="option-row">
+    <input type="checkbox" id="showListRatings" checked />
+    <label for="showListRatings">
+      Show Rating Badges
+      <span>Optional ★ labels on list pages. Row highlights stay on.</span>
+    </label>
+  </div>
+  <div id="progressContainer" aria-hidden="true">
+    <div class="progress-bar-track">
+      <div class="progress-bar-animated"></div>
+    </div>
+  </div>
+  <div id="status" aria-live="polite">Ready</div>
+  <button type="button" id="sync">Sync Ratings</button>
+  <button type="button" id="forceSyncBtn">Force Full Sync</button>
+  <div class="version-footer">v<span id="app-version"></span></div>
+  <script src="popup.js"></script>
+</body>
+</html>

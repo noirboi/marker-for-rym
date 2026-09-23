@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Marker for RYM",
+  "version": "1.1.1",
+  "description": "A minimal extension that syncs and highlights your RateYourMusic ratings on charts and lists with colored badges.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["*://rateyourmusic.com/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Marker for RYM",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://rateyourmusic.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
