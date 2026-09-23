@@ -4,6 +4,11 @@ A minimal Chrome extension for [Rate Your Music](https://rateyourmusic.com). It 
 
 Ratings stay on your device only — nothing is sent to a third-party server.
 
+## News & updates
+
+RYM forum thread (announcements, feedback, support):  
+[Chrome Extension: Marker for RYM](https://rym.fm/discussion/rate-your-music/_chrome-extension-marker-for-rym-highlight-your-rated-items-on-charts-and-lists/)
+
 ## Features
 
 - Sync rated music and films from your RYM collection (runs in your open RYM tab)
